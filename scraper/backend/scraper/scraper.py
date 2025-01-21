@@ -21,38 +21,43 @@ def scrape_ebird(url):
     common_name = heading_h1.find('span', class_='Heading-main').text.strip() if heading_h1 else None
     scientific_name = heading_h1.find('span', class_='Heading-sub Heading-sub--sci').text.strip() if heading_h1 else None
 
-    #Conservation status
-    conservation_status = None
-    conservation_div = soup.find('div', id='conservation-status')
-
-    if conservation_div:
-        # Find the div with the class 'u-colorReverse'
-        print(conservation_div.prettify())
-        color_reverse_div = conservation_div.find('div', class_='u-colorReverse')
-        
-        if color_reverse_div:
-            # Find the anchor tag inside the 'u-colorReverse' div
-            a_tag = color_reverse_div.find('a')
-            if a_tag:
-                # Find the span with class 'Badge-label' inside the anchor tag
-                print("a_tag")
-                badge_label_span = a_tag.find('span', class_='Badge-label')
-                if badge_label_span:
-                    print("ok")
-                    conservation_status = badge_label_span.text.strip()
+    # Extract the Hero image
+    hero_image_div = soup.find('div', class_='Hero-image')
+    hero_image_url = None
+    if hero_image_div:
+        # Find the <img> tag inside the Hero image div
+        img_tag = hero_image_div.find('img')
+        if img_tag:
+            # Check for the 'srcset' attribute and pick the highest resolution
+            if 'srcset' in img_tag.attrs:
+                srcset = img_tag.attrs['srcset']
+                # Get the highest resolution image from srcset
+                highest_res = srcset.split(",")[-1].strip().split(" ")[0]
+                hero_image_url = highest_res
+            elif 'src' in img_tag.attrs:
+                hero_image_url = img_tag.attrs['src']
+            # Extract the photographer's name from the 'alt' attribute
+            alt_text = img_tag.attrs.get('alt', '')
+            if alt_text:
+                # Extract the photographer's name from the middle of the alt text array
+                parts = alt_text.split(" - ")
+                if len(parts) > 1:
+                    photographer_name = parts[1].strip()
 
     # Format the data as JSON
     result = {
-        "breadcrumbs": breadcrumbs,
+        "order": breadcrumbs[0],
+        "family": breadcrumbs[1],
         "common_name": common_name,
         "scientific_name": scientific_name,
-        "conservation_status": conservation_status
+        "image_url": hero_image_url,
+        "image_credit": photographer_name
     }
 
     return result
 
 if __name__ == "__main__":
-    url = "https://ebird.org/species/blkvul"
+    url = "https://ebird.org/species/brakit1?siteLanguage=en_PH"
     data = scrape_ebird(url)
 
     if data:
