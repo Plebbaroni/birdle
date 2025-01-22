@@ -1,6 +1,11 @@
 import requests
 from bs4 import BeautifulSoup
+from supabase import create_client, Client
 import json
+
+# Supabase configuration
+SUPABASE_URL = "https://your-supabase-project-url.supabase.co"
+SUPABASE_KEY = "your-supabase-api-key"
 
 def scrape_ebird(url):
     # Send a GET request to the URL
@@ -56,13 +61,38 @@ def scrape_ebird(url):
 
     return result
 
+def insert_into_supabase(data):
+    # Create a Supabase client
+    supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
+
+    # Insert data into the 'birds' table
+    response = supabase.table("birds").insert(data).execute()
+
+    # Check for errors
+    if response.get("status_code") == 201:  # HTTP 201 Created
+        print("Data inserted successfully!")
+    else:
+        print("Error inserting data:", response)
+
 if __name__ == "__main__":
-    url = "https://ebird.org/species/brakit1?siteLanguage=en_PH"
-    data = scrape_ebird(url)
+    # Example URL (replace with a real eBird species URL)
+    url = "https://ebird.org/species/blkvul"
 
-    if data:
-        # Print the result in JSON format
-        print(json.dumps(data, indent=4))
+    # Scrape the data
+    bird_data = scrape_ebird(url)
+    if bird_data:
+        # Display the JSON data in the CLI
+        print("Scraped Data:")
+        print(json.dumps(bird_data, indent=4))
 
+        # Prompt for confirmation
+        user_input = input("\nDo you want to insert this data into the database? (y/n): ").strip().lower()
 
-
+        if user_input == "y":
+            insert_into_supabase(bird_data)
+        elif user_input == "n":
+            print("Data not inserted into the database.")
+        else:
+            print("Invalid input. Please type 'y' or 'n'.")
+    else:
+        print("No data scraped.")
