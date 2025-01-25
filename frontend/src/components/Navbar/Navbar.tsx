@@ -4,9 +4,9 @@ export default function Navbar() {
   return (
     <div className={classes.wrapper}>
         <div className={classes.logo}>
-            BirdOfTheDay
+            <p>BirdOfTheDay.</p>
         </div>
-        <div className="Links">
+        <div className={classes.links}>
             <p>Donate</p>
             <p>?</p>
         </div>
