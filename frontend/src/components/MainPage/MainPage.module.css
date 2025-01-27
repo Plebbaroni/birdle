@@ -1,4 +1,53 @@
 .wrapper {
     background-color: hsl(120, 2%, 9%);
     height: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.gameDiv {
+    height: 100%;
+    width: 60%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+}
+
+.todaysBird {
+    font-size: 26px;
+    color: white;
+    font-weight: 100;
+    padding: 1%;
+}
+
+.bird {
+    width: 100%;
+    height: 37%;
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.imgAndCredit {
+    width: 37%;
+    display: inline-block;
+}
+
+.birdImg {
+    display: block;
+    max-width: 100%;
+    height: auto;
+}
+
+.credit{
+    max-width: 100%;
+    background-color: black;
+    color: white;
+    font-size: 10%;
+    height: 5%;
+    display: flex;
+    align-items: center;
+    padding-left: 2px;
+    font-weight: 100;
 }

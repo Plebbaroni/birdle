@@ -1,8 +1,14 @@
-html, body {
+html, body{
   margin: 0;
   font-family: 'Montserrat', sans-serif;
+  overflow: hidden;
 }
+
 
 .page{
   height: 100vh;
+}
+
+p {
+  margin: 0;
 }
