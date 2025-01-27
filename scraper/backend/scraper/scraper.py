@@ -36,17 +36,20 @@ def scrape_ebird(url):
                 hero_image_url = highest_res
             elif 'src' in img_tag.attrs:
                 hero_image_url = img_tag.attrs['src']
-            alt_text = img_tag.attrs.get('alt', '')
-            if alt_text:
-                parts = alt_text.split(" - ")
-                if len(parts) > 1:
-                    photographer_name = parts[1].strip()
+     # Scrape the image credit from the <figcaption> element
+    figcaption = soup.find('figcaption', class_='Media-caption Species-media-credit')
+    if figcaption:
+        copyright_span = figcaption.find('span', string=lambda x: x and '©' in x)
+        if copyright_span:
+            photographer_name = copyright_span.text.strip().replace('©\xa0', '')
 
+    genus = scientific_name.split()[0] if scientific_name else None
     result = {
         "common_name": common_name,
         "scientific_name": scientific_name,
         "order": breadcrumbs[0],
         "family": breadcrumbs[1],
+        "genus": genus,
         "image_url": hero_image_url,
         "image_credit": photographer_name
     }

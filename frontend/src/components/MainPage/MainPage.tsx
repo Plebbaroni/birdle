@@ -1,5 +1,5 @@
 import classes from "./MainPage.module.css"
-
+import InputBar from "../InputBar/InputBar"
 function MainPage() {
     const bird = {
         imageurl: "https://cdn.download.ams.birds.cornell.edu/api/v1/asset/305292761/2400",
@@ -16,9 +16,8 @@ function MainPage() {
                         <p className={classes.credit}>© {bird.credit}</p>
                     </div>
                 </div>
-               <div className={classes.cardsDiv}>
-
-               </div>
+                <InputBar/>
+               <div className={classes.cardsDiv}></div>
             </div>
         </div>
     )
