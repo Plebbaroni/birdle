@@ -4,8 +4,8 @@ import GuessCard from "../GuessCard/GuessCard"
 
 function MainPage() {
     const bird = {
-        imageurl: "https://cdn.download.ams.birds.cornell.edu/api/v1/asset/305292761/2400",
-        credit: "Luke Seitz"
+        imageurl: "https://cdn.download.ams.birds.cornell.edu/api/v1/asset/297363481/2400",
+        credit: "Mary Rumple"
     }
 
     return (
