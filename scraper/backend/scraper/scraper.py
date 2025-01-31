@@ -44,12 +44,14 @@ def scrape_ebird(url):
             photographer_name = copyright_span.text.strip().replace('©\xa0', '')
 
     genus = scientific_name.split()[0] if scientific_name else None
+    species = scientific_name.split()[1] if scientific_name else None
     result = {
         "common_name": common_name,
         "scientific_name": scientific_name,
         "order": breadcrumbs[0],
         "family": breadcrumbs[1],
         "genus": genus,
+        "species": species,
         "image_url": hero_image_url,
         "image_credit": photographer_name
     }
