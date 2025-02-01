@@ -5,10 +5,10 @@ dotenv.config();
 const supabaseUrl = process.env["SUPABASE_URL"] || "INVALID";
 const supabaseKey = process.env["SUPABASE_KEY"] || "INVALID";
 
-const supabase = createClient(supabaseUrl, supabaseKey);
+const db = createClient(supabaseUrl, supabaseKey);
 
 const testConnection = async () => {
-  const { data, error } = await supabase.from('birds').select('*').limit(1);
+  const { data, error } = await db.from('birds').select('*').limit(1);
   if (error) {
     console.error('Error connecting to Supabase:', error);
   } else {
@@ -18,4 +18,4 @@ const testConnection = async () => {
 
 testConnection();
 
-export default supabase;
+export default db;
