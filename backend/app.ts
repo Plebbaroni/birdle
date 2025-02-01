@@ -45,7 +45,7 @@ app.use(
 app.use("/api", birdRoutes);
 */
 // Global error handler
-app.use((err:Error, req:Request, res:Response, next) => {
+app.use((err:Error, req:Request, res:Response, next:any) => {
   console.error(err.stack);
   res.status(500).json({ error: "Internal Server Error" });
 });
