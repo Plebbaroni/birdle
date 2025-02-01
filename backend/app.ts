@@ -1,20 +1,21 @@
-const express = require("express");
-const cors = require("cors");
-const redis = require("ioredis");
-const session = require("express-session");
-const RedisStore = require("connect-redis").default;
+import express, { Request, Response } from "express";
+import cors from "cors";
+import session, { Session } from "express-session";
+import Redis from "ioredis";
+import {RedisStore} from "connect-redis";
 
 // Initialize Redis client
-const redisClient = redis.createClient({
-  port: process.env.REDIS_PORT || 6379,
+const redisClient = new Redis({
+  port: process.env.REDIS_PORT ? Number(process.env.REDIS_PORT) : 6379,
   host: process.env.REDIS_HOST || "localhost",
 });
 
-redisClient.on("error", (err) => console.error("Redis Client Error", err));
-redisClient.connect().catch(console.error);
+redisClient.on("error", (err: Error) => console.error("Redis Client Error", err));
 
-// Initialize Redis store for sessions
-const redisStore = new RedisStore({ client: redisClient, prefix: "session:" });
+const redisStore = new RedisStore({
+  client: redisClient,
+  prefix: "session:",
+});
 
 // Initialize Express app
 const app = express();
@@ -40,11 +41,11 @@ app.use(
 );
 
 // Routes
-const birdRoutes = require("./routes/birdRoutes");
+/*const birdRoutes = require("./routes/birdRoutes");
 app.use("/api", birdRoutes);
-
+*/
 // Global error handler
-app.use((err, req, res, next) => {
+app.use((err:Error, req:Request, res:Response, next) => {
   console.error(err.stack);
   res.status(500).json({ error: "Internal Server Error" });
 });
