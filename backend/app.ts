@@ -1,16 +1,8 @@
 import express, { Request, Response } from "express";
 import cors from "cors";
 import session, { Session } from "express-session";
-import Redis from "ioredis";
 import {RedisStore} from "connect-redis";
-
-// Initialize Redis client
-const redisClient = new Redis({
-  port: process.env.REDIS_PORT ? Number(process.env.REDIS_PORT) : 6379,
-  host: process.env.REDIS_HOST || "localhost",
-});
-
-redisClient.on("error", (err: Error) => console.error("Redis Client Error", err));
+import redisClient from "./config/redis";
 
 const redisStore = new RedisStore({
   client: redisClient,
@@ -19,6 +11,7 @@ const redisStore = new RedisStore({
 
 // Initialize Express app
 const app = express();
+const SERVER_PORT = 5180;
 
 // Middleware
 app.use(cors({ origin: process.env.ALLOWED_ORIGINS || "*", credentials: true }));
@@ -48,6 +41,10 @@ app.use("/api", birdRoutes);
 app.use((err:Error, req:Request, res:Response, next:any) => {
   console.error(err.stack);
   res.status(500).json({ error: "Internal Server Error" });
+});
+
+app.listen(SERVER_PORT, () => {
+  console.log(`Server running on port http://localhost:${SERVER_PORT}`);
 });
 
 // Export the app for testing or other setups
