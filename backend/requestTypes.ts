@@ -6,11 +6,9 @@ export interface Bird {
     genus: string;
     image_url: string;
     image_credit: string;
-}
-
-export interface BirdId extends Bird {
     id: number;
 }
+
 
 export interface BirdIdRequest {
     id: number;
@@ -21,9 +19,13 @@ export interface TypedRequest<T> extends Express.Request {
 }
   
 export interface TypedRequestQuery<T> extends Express.Request {
-query: T;
+    query: T;
 }
   
 export interface TypedResponse<T> extends Express.Response {
     body: T;
+}
+
+export interface BirdBody {
+    bird: Bird;
 }

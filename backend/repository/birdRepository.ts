@@ -17,7 +17,7 @@ class BirdRepository {
     return data;
   }
 
-  async getBirdOfTheDay(): Promise<Bird | null> {
+  async getBirdOfTheDay(): Promise<Bird|null> {
     const { data, error } = await db
       .from("birds")
       .select("*")
@@ -28,7 +28,10 @@ class BirdRepository {
 
     if (error) {
       console.error("Error fetching bird of the day:", error);
-      return null;
+    }
+
+    if (!data) {
+        return null;
     }
 
     return data;
@@ -48,7 +51,7 @@ class BirdRepository {
     return true;
   }
 
-  async resetAllBirds(): Promise<Boolean> {
+  async resetAllBirdsIsUsed(): Promise<Boolean> {
     const {data, error} = await db
         .from("birds")
         .update({is_used: true})
