@@ -6,9 +6,13 @@ class birdService {
     private static readonly REDIS_CACHE_KEY = "bird_of_the_day";
 
     async getBirdOfTheDay(): Promise<Bird|null> {
-
+        const bird = await redisClient.get(birdService.REDIS_CACHE_KEY)
+        if (bird) {
+            return(JSON.parse(bird));
+        }
+        return null;
     }
-    
+
     async setBirdOfTheDay(): Promise<Bird|null> {
         let bird = await birdRepository.getBirdOfTheDay();
         if (!bird) {
