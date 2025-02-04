@@ -6,6 +6,7 @@ import redisClient from "./config/redis";
 import { v4 as uuidv4 } from "uuid"; 
 import cookieParser from "cookie-parser"; 
 import router from "./routes/routes";
+import { GameState } from "./requestTypes";
 
 const redisStore = new RedisStore({
   client: redisClient,
@@ -21,7 +22,7 @@ app.use(cors({ origin: process.env.ALLOWED_ORIGINS || "*", credentials: true }))
 app.use(express.json({ limit: "20mb" }));
 app.use(cookieParser());
 
-app.use((req, res, next) => {
+app.use(async (req, res, next) => {
   let userId = req.cookies.userId;
 
   if (!userId) {
@@ -35,6 +36,18 @@ app.use((req, res, next) => {
   }
 
   req.userId = userId;
+  
+  try {
+    const gameState = await redisClient.get(userId);
+    
+    if (gameState) {
+      req.gameState = JSON.parse(gameState) as GameState;
+    } else {
+      await redisClient.set(`user:${userId}:state`, JSON.stringify('ONGOING'), 'EX', 86400);
+    }
+  } catch (error) {
+    console.error('Failed to confirm gamestate');
+  }
   next();
 });
 
