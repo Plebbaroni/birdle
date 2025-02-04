@@ -18,13 +18,16 @@ class birdController {
         try {
             const id = req.query.id;
             if (!id) {
-                return res.status(400).json({error: "Invalid Id"});
+                res.status(400).send({error: "Invalid Id"});
+                return;
             }
             const bird = await birdService.getBirdById(id);
-            return res.status(200).json({bird: bird});
+            res.status(200).send({bird: bird});
+            return;
 
         } catch (error) {
-            return res.status(500).json({error: error});
+            res.status(500).send({error: error});
+            return;
         }
     }
 
@@ -32,13 +35,16 @@ class birdController {
         try {
             const { birdId, userId } = req.body;
             if (!birdId || !userId) {
-                return res.status(400).json({error: "Invalid input"});
+                res.status(400).send({error: "Invalid input"});
+                return;
             }
 
             const state = await birdService.guessBird(birdId, userId);
-            return res.status(200).json({state: state});
+            res.status(200).send({state: state});
+            return;
         } catch (error) {
-            return res.status(500).json({error: error});
+            res.status(500).send({error: error});
+            return;
         }
     }
 
@@ -46,13 +52,16 @@ class birdController {
         try {
             const id = req.query.userId;
             if (!id) {
-                return res.status(400).json({error: "Invalid input"});
+                res.status(400).send({error: "Invalid input"});
+                return;
             }
 
             const state = await birdService.getUserState(id);
-            return res.status(200).json({state:state});
+            res.status(200).send({state:state});
+            return;
         } catch (error) {
-            return res.status(500).json({error: error});
+            res.status(500).send({error: error});
+            return;
         }
     }
 }

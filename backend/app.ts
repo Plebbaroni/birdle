@@ -48,6 +48,7 @@ app.use(async (req, res, next) => {
   } catch (error) {
     console.error('Failed to confirm gamestate');
   }*/
+ 
   next();
 });
 
