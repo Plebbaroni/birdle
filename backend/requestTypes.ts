@@ -9,7 +9,6 @@ export interface Bird {
     id: number;
 }
 
-
 export interface BirdIdRequest {
     id: number;
 }
@@ -28,4 +27,10 @@ export interface TypedResponse<T> extends Express.Response {
 
 export interface BirdBody {
     bird: Bird;
+}
+
+export enum GameState{
+    ONGOING = "ONGOING",
+    WON = "WON",
+    LOST = "LOST"
 }

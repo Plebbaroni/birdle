@@ -3,6 +3,8 @@ import cors from "cors";
 import session, { Session } from "express-session";
 import {RedisStore} from "connect-redis";
 import redisClient from "./config/redis";
+import { v4 as uuidv4 } from "uuid"; 
+import cookieParser from "cookie-parser"; 
 
 const redisStore = new RedisStore({
   client: redisClient,
@@ -16,6 +18,24 @@ const SERVER_PORT = 5180;
 // Middleware
 app.use(cors({ origin: process.env.ALLOWED_ORIGINS || "*", credentials: true }));
 app.use(express.json({ limit: "20mb" }));
+app.use(cookieParser());
+
+app.use((req, res, next) => {
+  let userId = req.cookies.userId;
+
+  if (!userId) {
+    userId = uuidv4(); // Generate a unique UUID
+    res.cookie("userId", userId, {
+      maxAge: 30 * 24 * 60 * 60 * 1000, // Expires in 30 days
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+    });
+  }
+
+  req.userId = userId;
+  next();
+});
 
 // Session middleware
 app.use(
