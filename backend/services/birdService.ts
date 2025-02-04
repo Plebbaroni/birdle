@@ -45,7 +45,7 @@ class birdService {
         return bird;
     }
 
-    async guessBird(id: number, userId:string): Promise<boolean|null> {
+    async guessBird(id: number, userId:string): Promise<GameState|null> {
         const playerGuess = await this.getBirdById(id);
         const birdOfTheDay = await this.getBirdOfTheDay();
 
@@ -54,14 +54,21 @@ class birdService {
         }
 
         const guesses = await this.incrementUserGuess(userId);
+        let retval = await this.getUserState(userId); //should be ONGOING
 
-        if (playerGuess === birdOfTheDay) {
-            this.setUserState(userId, GameState.WON);
-            return true;
-        } else if (guesses === 5) { //maxguesses
-            this.setUserState(userId, GameState.LOST);
+        if (!retval) {
+            throw new Error('Failed to fetch gamestate');
         }
-        return false;
+
+        if (playerGuess === birdOfTheDay) { //win
+            retval = await this.setUserState(userId, GameState.WON);
+            return retval;
+        } else if (guesses === 5) { //maxguesses
+            retval = await this.setUserState(userId, GameState.LOST);
+            return retval
+        }
+
+        return retval;
     }
 
     async incrementUserGuess(userId:string):Promise<number|null> {
@@ -73,13 +80,14 @@ class birdService {
         const userGuess = await redisClient.get(`user:${userId}:guesses`);
         return userGuess ? parseInt(userGuess, 10) : 0
     }
-    async setUserState(userId:string, state:GameState) {
+    async setUserState(userId:string, state:GameState):Promise<GameState> {
         await redisClient.set(`user:${userId}:state`, state, "EX", 86400);
+        return state;
     }
 
-    async getUserState(userId:string):Promise<string|null> {
+    async getUserState(userId:string):Promise<GameState|null> {
         const userState = await redisClient.get(`user:${userId}:state`);
-        return userState;
+        return userState as GameState;
     }
 
 }

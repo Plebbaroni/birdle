@@ -13,6 +13,15 @@ export interface BirdIdRequest {
     id: number;
 }
 
+export interface GuessRequest {
+    birdId: number;
+    userId: string;
+}
+
+export interface UserRequest {
+    userId: string;
+}
+
 export interface TypedRequest<T> extends Express.Request {
     body: T;
 }
@@ -33,4 +42,8 @@ export enum GameState{
     ONGOING = "ONGOING",
     WON = "WON",
     LOST = "LOST"
+}
+
+export interface StateBody {
+    state: GameState;
 }
