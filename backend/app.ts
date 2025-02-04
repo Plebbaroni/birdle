@@ -37,7 +37,7 @@ app.use(async (req, res, next) => {
 
   req.userId = userId;
   
-  try {
+  /*try {
     const gameState = await redisClient.get(userId);
     
     if (gameState) {
@@ -47,7 +47,7 @@ app.use(async (req, res, next) => {
     }
   } catch (error) {
     console.error('Failed to confirm gamestate');
-  }
+  }*/
   next();
 });
 

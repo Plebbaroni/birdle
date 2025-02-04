@@ -91,7 +91,10 @@ class birdService {
     }
 
     async getUserState(userId:string):Promise<GameState|null> {
-        const userState = await redisClient.get(`user:${userId}:state`);
+        let userState = await redisClient.get(`user:${userId}:state`);
+        if (!userState) {
+            userState = await this.setUserState(userId, GameState.ONGOING);
+        }
         return userState as GameState;
     }
 
