@@ -5,6 +5,7 @@ import {RedisStore} from "connect-redis";
 import redisClient from "./config/redis";
 import { v4 as uuidv4 } from "uuid"; 
 import cookieParser from "cookie-parser"; 
+import router from "./routes/routes";
 
 const redisStore = new RedisStore({
   client: redisClient,
@@ -54,9 +55,8 @@ app.use(
 );
 
 // Routes
-/*const birdRoutes = require("./routes/birdRoutes");
-app.use("/api", birdRoutes);
-*/
+app.use("/api", router);
+
 // Global error handler
 app.use((err:Error, req:Request, res:Response, next:any) => {
   console.error(err.stack);

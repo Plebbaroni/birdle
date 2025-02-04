@@ -10,6 +10,11 @@ class birdService {
         if (bird) {
             return(JSON.parse(bird)) as Bird;
         }
+        const newbird = await this.setBirdOfTheDay();
+
+        if (newbird) {
+            return newbird;
+        }
         return null;
     }
 
@@ -26,7 +31,7 @@ class birdService {
                 throw new Error('No available birds after reset... very weird!');
             }
         }
-        const setUsed = birdRepository.setBirdIsUsed(bird.id);
+        const setUsed = await birdRepository.setBirdIsUsed(bird.id);
         if (!setUsed) {
             throw new Error('Failed to set bird used');
         }

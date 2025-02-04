@@ -1,7 +1,9 @@
 import db from "../config/db";
 import { Bird, TypedResponse } from "../requestTypes"
+import Util from "../util/util";
 
 class BirdRepository {
+
   async getBirdById(id: number): Promise<Bird | null> {
     const { data, error } = await db
       .from("birds")
@@ -22,19 +24,23 @@ class BirdRepository {
       .from("birds")
       .select("*")
       .eq("is_used", false)
-      .order("random()")
-      .limit(1)
-      .single(); 
 
-    if (error) {
+    if (error || !data) {
       console.error("Error fetching bird of the day:", error);
+      return null;
     }
 
-    if (!data) {
-        return null;
+    if (data.length === 0) {
+        const succ = await this.resetAllBirdsIsUsed();
+        if (succ) {
+            return this.getBirdOfTheDay();
+        } else {
+            console.error("Error fetching bird of the day:", error);
+            return null;
+        }
     }
-
-    return data;
+    const newdata = Util.shuffleArray(data);
+    return newdata[0];
   }
 
   async setBirdIsUsed(id:number): Promise<Boolean> {
@@ -54,7 +60,8 @@ class BirdRepository {
   async resetAllBirdsIsUsed(): Promise<Boolean> {
     const {data, error} = await db
         .from("birds")
-        .update({is_used: true})
+        .update({is_used: false})
+        .eq("is_used", true)
 
     if (error) {
         console.error("Error resetting is_used on all birds", error);

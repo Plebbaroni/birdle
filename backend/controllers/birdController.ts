@@ -6,15 +6,17 @@ class birdController {
     async getBirdOfTheDay(req:Request, res:Response) {
         try {
             const bird = await birdService.getBirdOfTheDay();
-            return res.status(200).json({bird: bird});
+            res.status(200).send({bird: bird});
+            return;
         } catch (error) {
-            return res.status(500).json({error: error});
+            res.status(500).send({error: error});
+            return;
         }
     }
 
-    async getBirdById(req:TypedRequest<BirdIdRequest>, res:Response) {
+    async getBirdById(req:any, res:Response) {
         try {
-            const id = req.body.id;
+            const id = req.query.id;
             if (!id) {
                 return res.status(400).json({error: "Invalid Id"});
             }
@@ -40,9 +42,9 @@ class birdController {
         }
     }
 
-    async getUserState(req:TypedRequest<UserRequest>, res:Response) {
+    async getUserState(req:any, res:Response) {
         try {
-            const id = req.body.userId;
+            const id = req.query.userId;
             if (!id) {
                 return res.status(400).json({error: "Invalid input"});
             }
