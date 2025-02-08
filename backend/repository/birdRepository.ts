@@ -1,6 +1,6 @@
 import db from "../config/db";
 import { Bird, TypedResponse } from "../requestTypes"
-import Util from "../util/util";
+import Util from "../util/Util";
 
 class BirdRepository {
 
