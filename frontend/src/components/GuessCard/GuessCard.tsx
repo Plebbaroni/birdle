@@ -1,23 +1,24 @@
 import classes from './GuessCard.module.css'
 
-function GuessCard() {
-    const birdOfTheDay = {
-        common_name: "Great Horned Owl",
-        scientific_name: "Bubo virginianus",
-        genus: "Bubo",
-        species: "virginianus",
-        order: "Strigiformes",
-        family: "Strigidae"
-    }
+interface Bird {
+    common_name: string;
+    scientific_name: string;
+    genus: string;
+    species: string;
+    order: string;
+    family: string;
+    [key:string]: string|boolean;
+}
 
-    const guess = {
-        common_name: "Snowy Owl",
-        scientific_name: "Bubo scandiacus",
-        genus: "Bubo",
-        species: "scandiacus",
-        order: "Strigiformes",
-        family: "Strigidae"
-    }
+interface GuessProps{
+    guess:Bird;
+    answer: Bird;
+}
+
+function GuessCard(props:GuessProps) {
+    const birdOfTheDay = props.answer
+
+    const guess = props.guess
 
   return (
     <div className={classes.wrapper}>
