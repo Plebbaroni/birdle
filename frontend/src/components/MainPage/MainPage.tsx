@@ -5,6 +5,7 @@ import {useEffect, useState} from "react";
 
 function MainPage() {
     const [bird, setBird] = useState(null)
+    //const [guesses, setGuesses] = useState([]); for rendering guesses
     useEffect(() => {
         const getBirdToday = async () => {
             const res = await fetch(`http://localhost:5181/api/bird-today`);
