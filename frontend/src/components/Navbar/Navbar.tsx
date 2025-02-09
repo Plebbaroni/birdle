@@ -7,7 +7,6 @@ export default function Navbar() {
             <p>BirdOfTheDay.</p>
         </div>
         <div className={classes.links}>
-            <p>Donate</p>
             <p>?</p>
         </div>
     </div>

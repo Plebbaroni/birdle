@@ -3,7 +3,6 @@ import { Bird, TypedResponse } from "../requestTypes"
 import Util from "../util/Util";
 
 class BirdRepository {
-
   async getBirdById(id: number): Promise<Bird | null> {
     const { data, error } = await db
       .from("birds")

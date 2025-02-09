@@ -18,11 +18,10 @@ function MainPage() {
     if(!bird) {
         return null;
     }
-    
+
     return (
         <div className={classes.wrapper}>
             <div className={classes.gameDiv}>
-                {bird ? (
                     <div className={classes.bird}>
                         <p className={classes.todaysBird}>Today's Bird</p>
                         <div className={classes.imgAndCredit}>
@@ -30,9 +29,6 @@ function MainPage() {
                             <p className={classes.credit}>© {bird.image_credit}</p>
                         </div>
                     </div>
-                ) : (
-                    <p>Loading today's bird...</p>
-                )}
                 <InputBar />
                 <div className={classes.cardsDiv}>
                     <GuessCard guess={bird} answer={bird}/>
