@@ -24,6 +24,15 @@ function InputBar() {
     <div className={classes.wrapper}>
         <div className={classes.inputBar}>
             <input type="text" name="" id="" className={classes.inputText} value={input} onChange={(e) => setInput(e.target.value)} placeholder="Enter Your Guess Here"/>
+            {results.length > 0 && (
+            <ul className={classes.resultsList}>
+              {results.map((result, index) => (
+                <li key={index} className={classes.resultItem}>
+                  {result}
+                </li>
+              ))}
+            </ul>
+        )}
         </div>
     </div>
   )

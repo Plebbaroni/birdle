@@ -51,10 +51,9 @@ class birdService {
     }
 
     async guessBird(id: number, userId:string): Promise<GameState|null> {
-        const playerGuess = await this.getBirdById(id);
         const birdOfTheDay = await this.getBirdOfTheDay();
 
-        if (!playerGuess || !birdOfTheDay) {
+        if (!id || !birdOfTheDay) {
             throw new Error('Failed to fetch and compare birds');
         }
 
@@ -65,7 +64,7 @@ class birdService {
             throw new Error('Failed to fetch gamestate');
         }
 
-        if (playerGuess === birdOfTheDay) { //win
+        if (id === birdOfTheDay.id) { //win
             retval = await this.setUserState(userId, GameState.WON);
             return retval;
         } else if (guesses === 5) { //maxguesses

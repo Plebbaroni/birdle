@@ -31,9 +31,10 @@ class birdController {
         }
     }
 
-    async guessBird(req:TypedRequest<GuessRequest>, res:Response) {
+    async guessBird(req:Request, res:Response) {
         try {
-            const { birdId, userId } = req.body;
+            const { birdId } = req.body;
+            const userId = req.userId
             if (!birdId || !userId) {
                 res.status(400).send({error: "Invalid input"});
                 return;
