@@ -6,6 +6,7 @@
     justify-content: center;
     margin-top: 1%;
     flex-direction: column;
+    margin-bottom: 0;
 }
 
 .inputBar{
@@ -15,6 +16,7 @@
     background-color: hsl(20, 4%, 16%);
     display: flex;
     align-items: center;
+    justify-content: center;
     position: relative;
 }
 .inputText, .inputText:focus, .inputText:active {
@@ -36,9 +38,25 @@
     border: 1px solid #ddd;
     max-height: 200px;
     overflow-y: auto;
-    position: absolute; /* Position relative to .inputBar */
-    width: 100%;
-    top: calc(100% + 5px); /* Places it slightly below inputBar */
-    left: 0;
+    position: absolute; /* Keeps it positioned within inputBar */
+    width: 98%; /* Make it take full width of inputBar */
+    top: 100%; /* Places it exactly below inputBar */
+    left: 50%; /* Move to center */
+    transform: translateX(-50%); /* Adjust centering */
     z-index: 10; /* Ensures it's above other elements */
+    opacity: 85%;
+}
+
+.resultItem {
+    padding: 8px;
+    cursor: pointer;
+    border-bottom: 1px solid #eee;
+  }
+  
+  .resultItem:last-child {
+    border-bottom: none;
+  }
+  
+  .resultItem:hover {
+    background: #f0f0f0;
   }
