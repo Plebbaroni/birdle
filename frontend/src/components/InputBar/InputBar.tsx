@@ -7,10 +7,11 @@ interface InputBarProps {
   setInput: React.Dispatch<React.SetStateAction<string>>;
   results: string[];
   setResults: React.Dispatch<React.SetStateAction<string[]>>;
+  handleGuess: (guess:string) => void;
 }
 
 
-function InputBar({ input, setInput, results, setResults }:InputBarProps) {
+function InputBar({ input, setInput, results, setResults, handleGuess }:InputBarProps) {
 
   const [isClicked, setIsClicked] = useState<boolean>(false);
 
@@ -26,6 +27,25 @@ function InputBar({ input, setInput, results, setResults }:InputBarProps) {
     }
   }, [input, setResults]);
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const lowerCaseInput = input.trim().toLowerCase();
+    const birdExists = Object.keys(birds).find((bird) => bird.toLowerCase() === lowerCaseInput);
+    if (birdExists) {
+        const guessId = birds[birdExists];
+        const results = await fetch(`http://localhost:5181/api/guess`, 
+          {
+            method: 'POST', 
+            credentials: "include", 
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({birdId: guessId})});
+        const resultsJSON = await results.json();
+        handleGuess(resultsJSON);
+    }
+}
+
   const fillBar = (result:string) => {
     setInput(result);
     setResults([]);
@@ -35,7 +55,11 @@ function InputBar({ input, setInput, results, setResults }:InputBarProps) {
   return (  
     <div className={classes.wrapper}>
         <div className={classes.inputBar}>
-          <input type="text" name="" id="" className={classes.inputText} value={input} onChange={(e) => setInput(e.target.value)} placeholder="Enter Your Guess Here"/>
+          <input type="text" name="" id="" className={classes.inputText} value={input} onChange={(e) => setInput(e.target.value)}  onKeyDown={(e) => {
+          if (e.key === "Enter") {
+            handleSubmit(e); // Trigger the submit when Enter is pressed
+          }
+        }} placeholder="Enter Your Guess Here"/>
           {results.length > 0 && !isClicked && (
             <ul className={classes.resultsList}>
               {results.map((result, index) => (

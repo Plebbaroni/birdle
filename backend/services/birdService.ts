@@ -71,11 +71,11 @@ class birdService {
         }
 
         await this.addBirdToGuesses(bird, userId);
-        
+
         if (bird.id === birdOfTheDay.id) { //win
             retval = await this.setUserState(userId, GameState.WON);
             return retval;
-        } else if (guesses === 5) { //maxguesses
+        } else if (guesses === 6) { //maxguesses
             retval = await this.setUserState(userId, GameState.LOST);
             return retval
         }

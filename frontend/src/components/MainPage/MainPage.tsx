@@ -2,20 +2,18 @@ import classes from "./MainPage.module.css"
 import InputBar from "../InputBar/InputBar"
 import GuessCard from "../GuessCard/GuessCard"
 import {useEffect, useState} from "react";
-import birds from "../InputBar/birds.json"
+
 function MainPage() {
     const [userState, setUserState] = useState(null);
     const [bird, setBird] = useState(null)
     const [input, setInput] = useState("");
     const [results, setResults] = useState([]);
-    const [curGuess, setCurGuess] = useState("");
     const [guesses, setGuesses] = useState([]); 
 
     useEffect(() => {
         const getBirdToday = async () => {
             const res = await fetch(`http://localhost:5181/api/bird-today`);
             const birdjson = await res.json();
-            console.log(birdjson);
             setBird(birdjson.bird);
         };
 
@@ -25,14 +23,12 @@ function MainPage() {
                 credentials: "include", 
               });
             const statejson = await res.json();
-            console.log(statejson);
             setUserState(statejson.state);
         }
 
         const getUserGuesses = async () => {
             const res = await fetch(`http://localhost:5181/api/userguesses`);
             const guessesjson = await res.json();
-            console.log(guessesjson);
             setGuesses(guessesjson.guesses);
         }
 
@@ -41,16 +37,14 @@ function MainPage() {
         getUserGuesses();
     }, []);
 
-    
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        const birdExists = Object.keys(birds).find((bird) => bird.toLowerCase() === input.toLowerCase());
-        if (birdExists) {
-            setCurGuess(birdExists);
-            const guessId = birds[birdMatch];
-
+    const handleGuess = (resBody) => {
+        console.log(resBody.state);
+        setUserState(resBody.state)
+        if (resBody.state === "ONGOING"){
+            setGuesses((prevGuesses) => [...prevGuesses, resBody.bird]);
         }
     }
+
     if(!bird) {
         return null;
     }
@@ -65,9 +59,13 @@ function MainPage() {
                             <p className={classes.credit}>© {bird.image_credit}</p>
                         </div>
                     </div>
-                    <InputBar input={input} setInput={setInput} results={results} setResults={setResults} />
+                    <InputBar input={input} setInput={setInput} results={results} setResults={setResults} handleGuess={handleGuess} />
                 <div className={classes.cardsDiv}>
-                    <GuessCard guess={bird} answer={bird}/>
+                    {
+                        guesses.map((guess, index) => (
+                            <GuessCard key={index} guess={guess} answer={bird}/>
+                        ))
+                    }
                 </div>
             </div>
         </div>

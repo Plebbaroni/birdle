@@ -39,7 +39,6 @@ class birdController {
                 res.status(400).send({error: "Invalid input"});
                 return;
             }
-            console.log(userId)
             const guessedBird = await birdService.getBirdById(birdId);
             const state = await birdService.guessBird(birdId, userId);
             res.status(200).send({state: state, bird: guessedBird});
