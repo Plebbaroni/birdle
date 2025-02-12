@@ -39,9 +39,10 @@ class birdController {
                 res.status(400).send({error: "Invalid input"});
                 return;
             }
-
+            console.log(userId)
+            const guessedBird = await birdService.getBirdById(birdId);
             const state = await birdService.guessBird(birdId, userId);
-            res.status(200).send({state: state});
+            res.status(200).send({state: state, bird: guessedBird});
             return;
         } catch (error) {
             res.status(500).send({error: error});
@@ -51,7 +52,7 @@ class birdController {
 
     async getUserState(req:any, res:Response) {
         try {
-            const id = req.query.userId;
+            const id = req.userId;
             if (!id) {
                 res.status(400).send({error: "Invalid input"});
                 return;
@@ -59,6 +60,23 @@ class birdController {
 
             const state = await birdService.getUserState(id);
             res.status(200).send({state:state});
+            return;
+        } catch (error) {
+            res.status(500).send({error: error});
+            return;
+        }
+    }
+
+    async getUserGuesses(req:any, res:Response) {
+        try {
+            const id = req.userId;
+            if (!id) {
+                res.status(400).send({error: "Invalid input"});
+                return;
+            }
+
+            const guesses = await birdService.getBirdGuesses(id);
+            res.status(200).send({guesses:guesses});
             return;
         } catch (error) {
             res.status(500).send({error: error});

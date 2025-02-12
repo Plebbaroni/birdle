@@ -2,10 +2,15 @@ import classes from "./MainPage.module.css"
 import InputBar from "../InputBar/InputBar"
 import GuessCard from "../GuessCard/GuessCard"
 import {useEffect, useState} from "react";
-
+import birds from "../InputBar/birds.json"
 function MainPage() {
+    const [userState, setUserState] = useState(null);
     const [bird, setBird] = useState(null)
-    //const [guesses, setGuesses] = useState([]); for rendering guesses
+    const [input, setInput] = useState("");
+    const [results, setResults] = useState([]);
+    const [curGuess, setCurGuess] = useState("");
+    const [guesses, setGuesses] = useState([]); 
+
     useEffect(() => {
         const getBirdToday = async () => {
             const res = await fetch(`http://localhost:5181/api/bird-today`);
@@ -13,9 +18,39 @@ function MainPage() {
             console.log(birdjson);
             setBird(birdjson.bird);
         };
+
+        const getUserState = async () => {
+            const res = await fetch(`http://localhost:5181/api/gamestate`, {
+                method: "GET",
+                credentials: "include", 
+              });
+            const statejson = await res.json();
+            console.log(statejson);
+            setUserState(statejson.state);
+        }
+
+        const getUserGuesses = async () => {
+            const res = await fetch(`http://localhost:5181/api/userguesses`);
+            const guessesjson = await res.json();
+            console.log(guessesjson);
+            setGuesses(guessesjson.guesses);
+        }
+
         getBirdToday();
+        getUserState();
+        getUserGuesses();
     }, []);
 
+    
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        const birdExists = Object.keys(birds).find((bird) => bird.toLowerCase() === input.toLowerCase());
+        if (birdExists) {
+            setCurGuess(birdExists);
+            const guessId = birds[birdMatch];
+
+        }
+    }
     if(!bird) {
         return null;
     }
@@ -30,7 +65,7 @@ function MainPage() {
                             <p className={classes.credit}>© {bird.image_credit}</p>
                         </div>
                     </div>
-                <InputBar />
+                    <InputBar input={input} setInput={setInput} results={results} setResults={setResults} />
                 <div className={classes.cardsDiv}>
                     <GuessCard guess={bird} answer={bird}/>
                 </div>

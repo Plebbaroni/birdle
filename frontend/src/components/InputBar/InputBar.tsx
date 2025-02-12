@@ -2,15 +2,21 @@ import classes from "./InputBar.module.css"
 import birds from "./birds.json"
 import { useState, useEffect} from "react";
 
-function InputBar() {
+interface InputBarProps {
+  input: string;
+  setInput: React.Dispatch<React.SetStateAction<string>>;
+  results: string[];
+  setResults: React.Dispatch<React.SetStateAction<string[]>>;
+}
 
-  const [input, setInput] = useState("");
-  const [results, setResults] = useState([]);
+
+function InputBar({ input, setInput, results, setResults }:InputBarProps) {
+
   const [isClicked, setIsClicked] = useState<boolean>(false);
 
   useEffect(() => {
     if (input.length >= 2) {
-      let lowerQuery = input.toLowerCase();
+      const lowerQuery = input.toLowerCase();
       lowerQuery.concat('  ');
       const res = Object.keys(birds).filter(bird => bird.toLowerCase().includes(lowerQuery));
       setResults(res);
@@ -18,7 +24,7 @@ function InputBar() {
     } else {
       setResults([]);
     }
-  }, [input]);
+  }, [input, setResults]);
 
   const fillBar = (result:string) => {
     setInput(result);

@@ -64,7 +64,15 @@ class birdService {
             throw new Error('Failed to fetch gamestate');
         }
 
-        if (id === birdOfTheDay.id) { //win
+        const bird = await this.getBirdById(id);
+
+        if (!bird) {
+            throw new Error('Failed to fetch bird');
+        }
+
+        await this.addBirdToGuesses(bird, userId);
+        
+        if (bird.id === birdOfTheDay.id) { //win
             retval = await this.setUserState(userId, GameState.WON);
             return retval;
         } else if (guesses === 5) { //maxguesses
@@ -97,6 +105,18 @@ class birdService {
         return userState as GameState;
     }
 
+    async addBirdToGuesses(bird:Bird, userId:string) {
+        await redisClient.rpush(`user:${userId}:guessArray`, JSON.stringify(bird));
+    }
+
+    async getBirdGuesses(userId:string): Promise<Bird[]|null> {
+        const birdList = await redisClient.lrange(`user:${userId}:guessArray`, 0, -1);
+        const birds:Bird[] = birdList.map(birdString => JSON.parse(birdString));
+        if (!birds) {
+            return null;
+        }
+        return birds
+    }
 }
 
 export default new birdService();
