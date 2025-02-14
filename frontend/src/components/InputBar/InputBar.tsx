@@ -57,7 +57,7 @@ function InputBar({ input, setInput, results, setResults, handleGuess }:InputBar
         <div className={classes.inputBar}>
           <input type="text" name="" id="" className={classes.inputText} value={input} onChange={(e) => setInput(e.target.value)}  onKeyDown={(e) => {
           if (e.key === "Enter") {
-            handleSubmit(e); // Trigger the submit when Enter is pressed
+            handleSubmit(e);
           }
         }} placeholder="Enter Your Guess Here"/>
           {results.length > 0 && !isClicked && (
