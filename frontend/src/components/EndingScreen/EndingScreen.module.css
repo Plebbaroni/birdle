@@ -1,0 +1,48 @@
+.wrapper {
+    background-color: hsl(120, 2%, 9%);
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    color: white;
+}
+
+.bird {
+    width: 100%;
+    height: auto;
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.imgAndCredit {
+    width: 37%;
+    display: inline-block;
+}
+
+.birdImg {
+    display: block;
+    max-width: 100%;
+    height: auto;
+}
+
+.credit{
+    max-width: 100%;
+    background-color: black;
+    color: white;
+    font-size: 10%;
+    height: 5%;
+    display: flex;
+    align-items: center;
+    padding-left: 2px;
+    font-weight: 100;
+}
+
+.endingSum {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 2%
+}

@@ -2,11 +2,22 @@ import classes from "./MainPage.module.css"
 import InputBar from "../InputBar/InputBar"
 import GuessCard from "../GuessCard/GuessCard"
 import {useEffect, useState} from "react";
+import EndingScreen from "../EndingScreen/EndingScreen";
 
 function MainPage() {
+    interface Bird{
+        common_name: string;
+        scientific_name: string;
+        genus: string;
+        species: string;
+        order: string;
+        family: string;
+        [key:string]: string|boolean;
+    }
+
     const [userState, setUserState] = useState(null);
-    const [bird, setBird] = useState(null)
-    const [input, setInput] = useState("");
+    const [bird, setBird] = useState<Bird|null>(null)
+    const [input, setInput] = useState<string>("");
     const [results, setResults] = useState([]);
     const [guesses, setGuesses] = useState([]); 
 
@@ -45,11 +56,12 @@ function MainPage() {
         }
     }
 
-    if(!bird) {
+    if(!bird || !userState) {
         return null;
     }
 
-    return (
+    return userState === "ONGOING" ?
+        (
         <div className={classes.wrapper}>
             <div className={classes.gameDiv}>
                     <div className={classes.bird}>
@@ -69,6 +81,8 @@ function MainPage() {
                 </div>
             </div>
         </div>
+    ):(
+        <EndingScreen bird={bird} state={userState}/>
     );
 }
 
