@@ -3,8 +3,8 @@ import cors from "cors";
 import session, { Session } from "express-session";
 import {RedisStore} from "connect-redis";
 import redisClient from "./config/redis";
-import { v4 as uuidv4 } from "uuid"; 
-import cookieParser from "cookie-parser"; 
+import { v4 as uuidv4 } from "uuid";
+import cookieParser from "cookie-parser";
 import router from "./routes/routes";
 import { GameState } from "./requestTypes";
 
