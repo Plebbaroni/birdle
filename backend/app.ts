@@ -15,7 +15,7 @@ const redisStore = new RedisStore({
 
 // Initialize Express app
 const app = express();
-const SERVER_PORT = 5180;
+const SERVER_PORT = 5181;
 
 // Middleware
 app.use(cors({ origin: process.env.ALLOWED_ORIGINS || "*", credentials: true }));

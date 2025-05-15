@@ -44,6 +44,7 @@ function InputBar({ input, setInput, results, setResults, handleGuess }:InputBar
         const resultsJSON = await results.json();
         handleGuess(resultsJSON);
     }
+    setInput('');
 }
 
   const fillBar = (result:string) => {

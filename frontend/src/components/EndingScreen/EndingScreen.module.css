@@ -19,6 +19,7 @@
 .imgAndCredit {
     width: 37%;
     display: inline-block;
+    margin-bottom: 10px;
 }
 
 .birdImg {
@@ -45,4 +46,12 @@
     justify-content: center;
     align-items: center;
     margin: 2%
+}
+
+.birdInfo {
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }

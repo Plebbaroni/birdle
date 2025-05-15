@@ -51,9 +51,11 @@ function EndingScreen(props:propType) {
           <img src={props.bird.image_url} alt="" className={classes.birdImg} />
           <p className={classes.credit}>© {props.bird.image_credit}</p>
         </div>
-        <p className={classes.birdCom}>{props.bird.common_name}</p>
-        <p className={classes.birdSci}>{props.bird.scientific_name}</p>
-      <p className={classes.countdown}>Try again in {formatTime(timeLeft)}</p>
+        <div className={classes.birdInfo}>
+          <p className={classes.birdCom}>{props.bird.common_name}</p>
+          <p className={classes.birdSci}>{props.bird.scientific_name}</p>
+          <p className={classes.countdown}>Try again in {formatTime(timeLeft)}</p>
+        </div>
     </div>
   )
 }
