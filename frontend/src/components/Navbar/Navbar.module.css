@@ -17,6 +17,7 @@
     color: white;
     font-weight: 100;
     display: flex;
+    margin-left: 10px;
 }
 
 .links {
@@ -25,4 +26,15 @@
     width: 10%;
     justify-content: space-evenly;
     color: hsl(20, 8%, 85%);
+    margin-right: 10px;
 }
+
+.link {
+    text-decoration: none;
+    color: inherit;
+  }
+  
+  .link:focus {
+    outline: none;
+    box-shadow: none;
+  }
