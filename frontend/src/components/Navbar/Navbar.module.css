@@ -23,7 +23,7 @@
 .links {
     display: flex;
     float: right;
-    width: 10%;
+    width: 20%;
     justify-content: space-evenly;
     color: hsl(20, 8%, 85%);
     margin-right: 10px;

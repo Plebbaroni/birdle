@@ -8,8 +8,8 @@ export default function Navbar() {
             <Link to="/" className={classes.link}><p>BirdOfTheDay.</p></Link>
         </div>
         <div className={classes.links}>
-          <Link to="/charities" className={classes.link}>Charities</Link>
-          <p>?</p>
+          <Link to="/charities" className={classes.link}><p>Charities</p></Link>
+          <Link to="/howtoplay" className={classes.link}><p>How To Play</p></Link>
         </div>
     </div>
   )

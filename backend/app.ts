@@ -7,6 +7,32 @@ import { v4 as uuidv4 } from "uuid";
 import cookieParser from "cookie-parser";
 import router from "./routes/routes";
 import { GameState } from "./requestTypes";
+import cron from 'node-cron';
+import birdService from "./services/birdService";
+
+cron.schedule('0 0 * * *', async () => {
+  console.log('[CRON] Resetting all user states to ONGOING');
+
+  try {
+    let cursor = '0';
+    do {
+      const [newCursor, keys] = await redisClient.scan(cursor, 'MATCH', 'user:*:state', 'COUNT', 100);
+      cursor = newCursor;
+
+      for (const key of keys) {
+        await redisClient.set(key, JSON.stringify('ONGOING'), 'EX', 86400);
+      }
+    } while (cursor !== '0');
+
+    await birdService.setBirdOfTheDay();
+
+    console.log('[CRON] All user states and bird of the day reset');
+  } catch (err) {
+    console.error('[CRON] Failed to reset user states or bird of the day:', err);
+  }
+}, {
+  timezone: "UTC"
+});
 
 const redisStore = new RedisStore({
   client: redisClient,
@@ -26,9 +52,9 @@ app.use(async (req, res, next) => {
   let userId = req.cookies.userId;
 
   if (!userId) {
-    userId = uuidv4(); // Generate a unique UUID
+    userId = uuidv4();
     res.cookie("userId", userId, {
-      maxAge: 30 * 24 * 60 * 60 * 1000, // Expires in 30 days
+      maxAge: 30 * 24 * 60 * 60 * 1000,
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "strict",
@@ -36,19 +62,18 @@ app.use(async (req, res, next) => {
   }
 
   req.userId = userId;
-  
-  /*try {
-    const gameState = await redisClient.get(userId);
-    
-    if (gameState) {
-      req.gameState = JSON.parse(gameState) as GameState;
-    } else {
-      await redisClient.set(`user:${userId}:state`, JSON.stringify('ONGOING'), 'EX', 86400);
-    }
-  } catch (error) {
-    console.error('Failed to confirm gamestate');
-  }*/
- 
+
+  // try {
+  //   const gameState = await redisClient.get(userId);
+
+  //   if (gameState) {
+  //     req.gameState = JSON.parse(gameState) as GameState;
+  //   } else {
+  //     await redisClient.set(`user:${userId}:state`, JSON.stringify('ONGOING'), 'EX', 86400);
+  //   }
+  // } catch (error) {
+  //   console.error('Failed to confirm gamestate');
+  // }
   next();
 });
 

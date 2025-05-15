@@ -19,10 +19,18 @@ interface propType {
 function EndingScreen(props:propType) {
   const targetDate = useMemo(() => {
     const date = new Date();
-    date.setDate(date.getDate() + 1); 
-    date.setHours(0, 0, 0, 0); 
-    return date.getTime();
+
+    const utcDate = new Date(Date.UTC(
+      date.getUTCFullYear(),
+      date.getUTCMonth(),
+      date.getUTCDate()
+    ));
+
+    utcDate.setUTCDate(utcDate.getUTCDate() + 1);
+    utcDate.setUTCHours(0, 0, 0, 0);
+    return utcDate.getTime();
   }, []);
+
 
   const [timeLeft, setTimeLeft] = useState<number>(targetDate - Date.now());
 

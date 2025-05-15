@@ -4,6 +4,7 @@ import './App.css'
 import Navbar from './components/Navbar/Navbar'
 import MainPage from './components/MainPage/MainPage'
 import CharitiesPage from './components/CharitiesPage/CharitiesPage'
+import HowToPlay from './components/HowToPlay/HowToPlay'
 
 function App() {
 
@@ -15,6 +16,7 @@ function App() {
         <Routes>
           <Route path='/' element={<MainPage/>}/>
           <Route path='/charities' element={<CharitiesPage/>}/>
+          <Route path='/howtoplay' element={<HowToPlay/>}/>
         </Routes>
       </div>
     </BrowserRouter>
