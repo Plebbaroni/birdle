@@ -1,0 +1,22 @@
+.wrapper {
+    background-color: hsl(120, 2%, 9%);
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    overflow-y: scroll;
+}
+
+.infoheader {
+    display: flex;
+    flex-direction: column;
+    color: white;
+    align-items: center;
+}
+
+h1 {
+    font-weight: 200;
+}
+
+p {
+    font-weight: 100;
+}

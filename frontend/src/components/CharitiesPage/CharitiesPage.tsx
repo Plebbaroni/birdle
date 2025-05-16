@@ -9,7 +9,7 @@ function CharitiesPage() {
             <p>Our planet's wildlife is on the brink. A donation may be able to help them. Consider donating to conservation societies below!</p>
         </div>
         <div className={classes.charities}>
-
+            
         </div>
     </div>
   )
