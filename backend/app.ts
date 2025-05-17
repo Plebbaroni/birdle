@@ -43,7 +43,19 @@ const app = express();
 const SERVER_PORT = 5181;
 
 // Middleware
-app.use(cors({ origin: process.env.ALLOWED_ORIGINS || "*", credentials: true }));
+const allowedOrigins = process.env.ALLOWED_ORIGINS ? process.env.ALLOWED_ORIGINS.split(",") : [];
+
+app.use(cors({
+  origin: function(origin, callback) {
+    if (!origin) return callback(null, true); // allow REST clients like Postman
+    if (allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  credentials: true,
+}));
 app.use(express.json({ limit: "20mb" }));
 app.use(cookieParser());
 
@@ -56,7 +68,7 @@ app.use(async (req, res, next) => {
       maxAge: 30 * 24 * 60 * 60 * 1000,
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
     });
   }
 
