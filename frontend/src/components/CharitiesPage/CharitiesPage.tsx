@@ -16,7 +16,7 @@ function CharitiesPage() {
               <p>Please consider learning more or supporting their efforts by visiting their websites or making a donation.</p>
           </div>
           <div className={classes.charities}>
-              <p>lol</p>
+              <p>fillertext</p>
           </div>
           <div className={classes.footerdiv}>
             <p className={classes.footer}>*No styling yet for the links. I'll need permission to use logos.</p>
