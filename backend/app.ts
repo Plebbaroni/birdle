@@ -20,7 +20,7 @@ cron.schedule('0 0 * * *', async () => {
       cursor = newCursor;
 
       for (const key of keys) {
-        await redisClient.set(key, JSON.stringify('ONGOING'), 'EX', 86400);
+        await redisClient.del(key);
       }
     } while (cursor !== '0');
 
