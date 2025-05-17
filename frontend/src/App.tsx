@@ -15,7 +15,6 @@ function App() {
         <Navbar/>
         <Routes>
           <Route path='/' element={<MainPage/>}/>
-          <Route path='/charities' element={<CharitiesPage/>}/>
           <Route path='/howtoplay' element={<HowToPlay/>}/>
         </Routes>
       </div>

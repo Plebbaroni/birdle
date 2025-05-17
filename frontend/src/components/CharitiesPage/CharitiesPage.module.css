@@ -1,16 +1,22 @@
 .wrapper {
     background-color: hsl(120, 2%, 9%);
-    height: 100%;
+    min-height: calc(100vh - 8%);
     display: flex;
-    justify-content: center;
-    overflow-y: scroll;
+    flex-direction: column;
+    align-items: center;
 }
 
+.content {
+    height: 100%;
+    width: 80%;
+    overflow-y: scroll;
+}
 .infoheader {
     display: flex;
     flex-direction: column;
     color: white;
     align-items: center;
+    width: 90%;
 }
 
 h1 {
@@ -19,4 +25,23 @@ h1 {
 
 p {
     font-weight: 100;
+    color: white;
+}
+
+.footerdiv {
+    height: 5vh;
+    width: 100%;
+}
+
+.charities {
+    flex: 1;
+    height: 3000px;
+}
+
+.footer {
+    font-size: 11px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: auto;
 }
