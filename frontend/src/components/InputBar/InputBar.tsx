@@ -1,19 +1,36 @@
 import classes from "./InputBar.module.css"
-import birds from "./birds.json"
+import birdsData from "./birds.json"
 import { useState, useEffect} from "react";
-
+interface Bird{
+  common_name: string;
+  scientific_name: string;
+  genus: string;
+  species: string;
+  order: string;
+  family: string;
+  image_url:string;
+  [key:string]: string|boolean;
+}
+interface resBodyType {
+  state: string;
+  bird: Bird;
+}
 interface InputBarProps {
   input: string;
   setInput: React.Dispatch<React.SetStateAction<string>>;
   results: string[];
   setResults: React.Dispatch<React.SetStateAction<string[]>>;
-  handleGuess: (guess:string) => void;
+  handleGuess: (resBody: resBodyType) => void;
 }
 
 
 function InputBar({ input, setInput, results, setResults, handleGuess }:InputBarProps) {
-
+  const birds:Record<string, number> = birdsData;
   const [isClicked, setIsClicked] = useState<boolean>(false);
+  let API_URL = import.meta.env.VITE_API_URL;
+    if (API_URL == null) {
+        API_URL = "http://localhost:5181";
+    }
 
   useEffect(() => {
     if (input.length >= 2) {
@@ -27,13 +44,13 @@ function InputBar({ input, setInput, results, setResults, handleGuess }:InputBar
     }
   }, [input, setResults]);
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const lowerCaseInput = input.trim().toLowerCase();
     const birdExists = Object.keys(birds).find((bird) => bird.toLowerCase() === lowerCaseInput);
     if (birdExists) {
         const guessId = birds[birdExists];
-        const results = await fetch(`http://localhost:5181/api/guess`, 
+        const results = await fetch(`${API_URL}/api/guess`, 
           {
             method: 'POST', 
             credentials: "include", 
@@ -53,14 +70,12 @@ function InputBar({ input, setInput, results, setResults, handleGuess }:InputBar
     setIsClicked(true)
   }
 
-  return (  
+  return ( 
     <div className={classes.wrapper}>
         <div className={classes.inputBar}>
-          <input type="text" name="" id="" className={classes.inputText} value={input} onChange={(e) => setInput(e.target.value)}  onKeyDown={(e) => {
-          if (e.key === "Enter") {
-            handleSubmit(e);
-          }
-        }} placeholder="Enter Your Guess Here"/>
+          <form onSubmit={handleSubmit}>
+          <input type="text" name="" id="" className={classes.inputText} value={input} onChange={(e) => setInput(e.target.value)} placeholder="Enter Your Guess Here"/>
+        </form>
           {results.length > 0 && !isClicked && (
             <ul className={classes.resultsList}>
               {results.map((result, index) => (
