@@ -5,17 +5,63 @@ import redisClient from "../config/redis";
 class birdService {
     private static readonly REDIS_CACHE_KEY = "bird_of_the_day";
 
-    async getBirdOfTheDay(): Promise<Bird|null> {
-        const bird = await redisClient.get(birdService.REDIS_CACHE_KEY)
-        if (bird) {
-            return(JSON.parse(bird)) as Bird;
-        }
-        const newbird = await this.setBirdOfTheDay();
+    // async getBirdOfTheDay(): Promise<Bird|null> {
+    //     const bird = await redisClient.get(birdService.REDIS_CACHE_KEY)
+    //     console.log("got bird:" + bird);
+    //     if (typeof bird === "string") {
+    //         console.log("returning bird:" + bird);
+    //         return(JSON.parse(bird)) as Bird;
+    //     }
 
-        if (newbird) {
-            return newbird;
+    //     const newbird = await this.setBirdOfTheDay();
+    //     console.log("got new bird:" + bird);
+    //     if (newbird) {
+    //         console.log("returning new bird:" + bird);
+    //         return newbird;
+    //     }
+    //     return null;
+    // }
+
+    async getBirdOfTheDay(): Promise<Bird | null> {
+        const cachedBird = await redisClient.get(birdService.REDIS_CACHE_KEY);
+
+        if (cachedBird) {
+            const bird = typeof cachedBird === "string" ? JSON.parse(cachedBird) : cachedBird;
+            return bird as Bird;
         }
-        return null;
+
+        //most of this concurrency/locking stuff is chatgpt
+        const lockKey = "bird_of_the_day_lock";
+        const lockAcquired = await redisClient.set(lockKey, "locked", {
+            nx: true,
+            ex: 5,
+        });
+
+        if (!lockAcquired) {
+            await new Promise(res => setTimeout(res, 5000));
+            return this.getBirdOfTheDay();
+        }
+
+        try {
+            const doubleCheck = await redisClient.get(birdService.REDIS_CACHE_KEY);
+
+            if (typeof doubleCheck === "string") {
+                console.log("Returning bird from double check");
+                return JSON.parse(doubleCheck) as Bird;
+            }
+
+            console.log("Calling setBirdOfTheDay()");
+            const newBird = await this.setBirdOfTheDay();
+            console.log("New bird set:", newBird);
+
+            return newBird;
+        } catch (err) {
+            console.error("Error during getBirdOfTheDay:", err);
+            return null;
+        } finally {
+            console.log("Releasing lock");
+            await redisClient.del(lockKey);
+        }
     }
 
     async setBirdOfTheDay(): Promise<Bird|null> {
@@ -35,7 +81,9 @@ class birdService {
         if (!setUsed) {
             throw new Error('Failed to set bird used');
         }
-        await redisClient.set(birdService.REDIS_CACHE_KEY, JSON.stringify(bird), 'EX', 86400);
+        await redisClient.set(birdService.REDIS_CACHE_KEY, JSON.stringify(bird), {
+            ex: 86400,
+          });
 
         return bird;
     }
@@ -90,10 +138,12 @@ class birdService {
 
     async GetUserGuess(userId:string): Promise<number|null> {
         const userGuess = await redisClient.get(`user:${userId}:guesses`);
-        return userGuess ? parseInt(userGuess, 10) : 0
+        return userGuess ? parseInt(userGuess as string, 10) : 0
     }
     async setUserState(userId:string, state:GameState):Promise<GameState> {
-        await redisClient.set(`user:${userId}:state`, state, "EX", 86400);
+        await redisClient.set(`user:${userId}:state`, state, {
+            ex: 86400,
+          });
         return state;
     }
 

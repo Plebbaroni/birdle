@@ -16,9 +16,8 @@ cron.schedule('0 0 * * *', async () => {
   try {
     let cursor = '0';
     do {
-      const [newCursor, keys] = await redisClient.scan(cursor, 'MATCH', 'user:*:state', 'COUNT', 100);
-      cursor = newCursor;
-
+      const [nextCursor, keys] = await redisClient.scan(cursor, { match: "user:*:state", count: 100 });
+      cursor = nextCursor;
       for (const key of keys) {
         await redisClient.del(key);
       }
