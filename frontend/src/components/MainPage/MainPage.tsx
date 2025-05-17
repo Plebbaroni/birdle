@@ -1,8 +1,9 @@
 import classes from "./MainPage.module.css"
 import InputBar from "../InputBar/InputBar"
 import GuessCard from "../GuessCard/GuessCard"
-import {useEffect, useState} from "react";
+import {useEffect, useState, useRef} from "react";
 import EndingScreen from "../EndingScreen/EndingScreen";
+import {motion} from "framer-motion"
 
 function MainPage() {
     interface Bird{
@@ -20,6 +21,7 @@ function MainPage() {
     const [input, setInput] = useState<string>("");
     const [results, setResults] = useState([]);
     const [guesses, setGuesses] = useState([]); 
+    const cardsRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         const getBirdToday = async () => {
@@ -56,6 +58,15 @@ function MainPage() {
         }
     }
 
+    useEffect(() => {
+        if (cardsRef.current) {
+            cardsRef.current.scrollTo({
+                left: cardsRef.current.scrollWidth,
+                behavior: 'smooth',
+            });
+        }
+    }, [guesses]);
+
     if(!bird || !userState) {
         return null;
     }
@@ -63,7 +74,12 @@ function MainPage() {
     return userState === "ONGOING" ?
         (
         <div className={classes.wrapper}>
-            <div className={classes.gameDiv}>
+            <motion.div
+            className={classes.gameDiv}
+            initial={{ opacity: 0, y: 5 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3, ease: "easeOut" }}
+            >
                     <div className={classes.bird}>
                         <p className={classes.todaysBird}>Today's Bird</p>
                         <div className={classes.imgAndCredit}>
@@ -72,14 +88,21 @@ function MainPage() {
                         </div>
                     </div>
                     <InputBar input={input} setInput={setInput} results={results} setResults={setResults} handleGuess={handleGuess} />
-                <div className={classes.cardsDiv}>
+                <div className={classes.cardsDiv} ref={cardsRef}>
                     {
                         guesses.map((guess, index) => (
-                            <GuessCard key={index} guess={guess} answer={bird}/>
+                            <motion.div
+                            className={classes.fadein}
+                            initial={{ opacity: 0, y: 0 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.3, ease: "easeOut" }}
+                            >
+                                <GuessCard key={index} guess={guess} answer={bird}/>
+                            </motion.div>
                         ))
                     }
                 </div>
-            </div>
+            </motion.div>
         </div>
     ):(
         <EndingScreen bird={bird} state={userState}/>

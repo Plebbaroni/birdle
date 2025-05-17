@@ -1,5 +1,6 @@
 import {useState, useEffect, useMemo} from 'react'
 import classes from './EndingScreen.module.css';
+import {motion} from "framer-motion";
 
 interface Bird {
   common_name: string;
@@ -19,10 +20,18 @@ interface propType {
 function EndingScreen(props:propType) {
   const targetDate = useMemo(() => {
     const date = new Date();
-    date.setDate(date.getDate() + 1); 
-    date.setHours(0, 0, 0, 0); 
-    return date.getTime();
+
+    const utcDate = new Date(Date.UTC(
+      date.getUTCFullYear(),
+      date.getUTCMonth(),
+      date.getUTCDate()
+    ));
+
+    utcDate.setUTCDate(utcDate.getUTCDate() + 1);
+    utcDate.setUTCHours(0, 0, 0, 0);
+    return utcDate.getTime();
   }, []);
+
 
   const [timeLeft, setTimeLeft] = useState<number>(targetDate - Date.now());
 
@@ -42,21 +51,26 @@ function EndingScreen(props:propType) {
   }
 
   return(
-    <div className={classes.wrapper}>
-        <div className={classes.endingSum}>
-          <p className={classes.endingMsg}>{props.state === "WON" ? "Congratulations!" : "Better luck next time!"}</p>
-          <p className={classes.birdIs}>The bird of the day was</p>
-        </div>
-        <div className={classes.imgAndCredit}>
-          <img src={props.bird.image_url} alt="" className={classes.birdImg} />
-          <p className={classes.credit}>© {props.bird.image_credit}</p>
-        </div>
-        <div className={classes.birdInfo}>
-          <p className={classes.birdCom}>{props.bird.common_name}</p>
-          <p className={classes.birdSci}>{props.bird.scientific_name}</p>
-          <p className={classes.countdown}>Try again in {formatTime(timeLeft)}</p>
-        </div>
-    </div>
+        <motion.div
+          className={classes.wrapper}
+          initial={{ opacity: 0, y: 5 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3, ease: "easeOut" }}
+        >
+          <div className={classes.endingSum}>
+            <p className={classes.endingMsg}>{props.state === "WON" ? "Congratulations!" : "Better luck next time!"}</p>
+            <p className={classes.birdIs}>The bird of the day was</p>
+          </div>
+          <div className={classes.imgAndCredit}>
+            <img src={props.bird.image_url} alt="" className={classes.birdImg} />
+            <p className={classes.credit}>© {props.bird.image_credit}</p>
+          </div>
+          <div className={classes.birdInfo}>
+            <p className={classes.birdCom}>{props.bird.common_name}</p>
+            <p className={classes.birdSci}>{props.bird.scientific_name}</p>
+            <p className={classes.countdown}>Try again in {formatTime(timeLeft)}</p>
+          </div>
+        </motion.div>
   )
 }
 
