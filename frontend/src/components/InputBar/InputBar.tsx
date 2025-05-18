@@ -73,9 +73,9 @@ function InputBar({ input, setInput, results, setResults, handleGuess }:InputBar
   return ( 
     <div className={classes.wrapper}>
         <div className={classes.inputBar}>
-          <form onSubmit={handleSubmit}>
-          <input type="text" name="" id="" className={classes.inputText} value={input} onChange={(e) => setInput(e.target.value)} placeholder="Enter Your Guess Here"/>
-        </form>
+          <form onSubmit={handleSubmit} className={classes.inputForm}>
+            <input type="text" name="" id="" className={classes.inputText} value={input} onChange={(e) => setInput(e.target.value)} placeholder="Enter Your Guess Here"/>
+          </form>
           {results.length > 0 && !isClicked && (
             <ul className={classes.resultsList}>
               {results.map((result, index) => (

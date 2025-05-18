@@ -15,7 +15,6 @@
     border-radius: 10px;
     background-color: hsl(20, 4%, 16%);
     display: flex;
-    justify-content: center;
     position: relative;
 }
 
@@ -30,6 +29,10 @@
     caret-color: whitesmoke;
 }
 
+.inputForm {
+  width: 100%;
+  display: flex;
+}
 .resultsList {
     list-style: none;
     padding: 0;
