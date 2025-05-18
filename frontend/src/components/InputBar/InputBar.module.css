@@ -15,10 +15,9 @@
     border-radius: 10px;
     background-color: hsl(20, 4%, 16%);
     display: flex;
-    align-items: center;
-    justify-content: center;
     position: relative;
 }
+
 .inputText, .inputText:focus, .inputText:active {
     background: none;
     border: none;
@@ -30,6 +29,10 @@
     caret-color: whitesmoke;
 }
 
+.inputForm {
+  width: 100%;
+  display: flex;
+}
 .resultsList {
     list-style: none;
     padding: 0;

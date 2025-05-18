@@ -1,4 +1,3 @@
-import React from 'react'
 import classes from "./HowToPlay.module.css"
 import {motion} from "framer-motion"
 

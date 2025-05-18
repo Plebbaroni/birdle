@@ -59,4 +59,10 @@
     display: flex;
     align-items: center;
     justify-content: flex-start;
+    -ms-overflow-style: none; 
+    scrollbar-width: none; 
+}
+
+.cardsDiv::-webkit-scrollbar {
+    display: none;
 }

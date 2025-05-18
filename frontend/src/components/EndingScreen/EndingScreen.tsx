@@ -9,6 +9,7 @@ interface Bird {
   species: string;
   order: string;
   family: string;
+  image_url:string;
   [key:string]: string|boolean;
 }
 

@@ -13,34 +13,42 @@ function MainPage() {
         species: string;
         order: string;
         family: string;
+        image_url:string;
         [key:string]: string|boolean;
     }
-
-    const [userState, setUserState] = useState(null);
+    interface resBodyType {
+        state: string;
+        bird: Bird;
+    }
+    const [userState, setUserState] = useState<string>("");
     const [bird, setBird] = useState<Bird|null>(null)
     const [input, setInput] = useState<string>("");
-    const [results, setResults] = useState([]);
-    const [guesses, setGuesses] = useState([]); 
+    const [results, setResults] = useState<string[]>([]);
+    const [guesses, setGuesses] = useState<Bird[]>([]);
     const cardsRef = useRef<HTMLDivElement>(null);
+    let API_URL = import.meta.env.VITE_API_URL;
+    if (API_URL == null) {
+        API_URL = "http://localhost:5181";
+    }
 
     useEffect(() => {
         const getBirdToday = async () => {
-            const res = await fetch(`http://localhost:5181/api/bird-today`);
+            const res = await fetch(`${API_URL}/api/bird-today`);
             const birdjson = await res.json();
             setBird(birdjson.bird);
         };
 
         const getUserState = async () => {
-            const res = await fetch(`http://localhost:5181/api/gamestate`, {
+            const res = await fetch(`${API_URL}/api/gamestate`, {
                 method: "GET",
-                credentials: "include", 
+                credentials: "include",
               });
             const statejson = await res.json();
             setUserState(statejson.state);
         }
 
         const getUserGuesses = async () => {
-            const res = await fetch(`http://localhost:5181/api/userguesses`);
+            const res = await fetch(`${API_URL}/api/userguesses`);
             const guessesjson = await res.json();
             setGuesses(guessesjson.guesses);
         }
@@ -50,7 +58,7 @@ function MainPage() {
         getUserGuesses();
     }, []);
 
-    const handleGuess = (resBody) => {
+    const handleGuess = (resBody: resBodyType) => {
         console.log(resBody.state);
         setUserState(resBody.state)
         if (resBody.state === "ONGOING"){
